@@ -15,4 +15,5 @@ export class Profile{
     age:number
     @Column()
     dob:string
+
 }

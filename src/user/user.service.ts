@@ -12,14 +12,14 @@ export class UserService {
         @InjectRepository(User)
         private readonly userRepository:Repository<User>
     ){}
-    // private users:User[]=[]
-    // signup (){return {msg:"I g=have sign up" }    }
-    // signin (){return {msg:"I g=have sign in" }}
-    // findAll():Promise<User[]>{
-    //     return this.userRepository.find()
-    // }
+
     findUsers(){
        return this.userRepository.find()
+    }
+    findOne(id:number):Promise<User>{
+        return this.userRepository.findOne({
+            where:{id:id}
+        })
     }
 
     createUser(createUserDto:CreateUserDto):Promise<User>{
@@ -34,4 +34,5 @@ export class UserService {
     deleteUser(id:number){
         return this.userRepository.delete({id})
     }
+    // createUser
 }
