@@ -1,4 +1,5 @@
-import { IsEmpty, IsNotEmpty, IsNumber } from "class-validator";
+/* eslint-disable prettier/prettier */
+import { IsDate, IsNotEmpty, IsNumber } from "class-validator";
 
 export class UserProfileDto {
     @IsNotEmpty()
@@ -8,5 +9,6 @@ export class UserProfileDto {
     @IsNumber()
     age:number
     @IsNotEmpty()
+    @IsDate()
     dob:string
 }
