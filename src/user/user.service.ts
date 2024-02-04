@@ -1,16 +1,17 @@
 /* eslint-disable prettier/prettier */
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateUserDto } from 'src/input/create-user.dto';
 import { Repository } from 'typeorm';
-import { User } from './user.entity';
+import { User } from './user.schema';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateUserDto } from 'src/input/update-user.dto';
 
 @Injectable()
-export class UserService {
+export class UserService {    
+    private readonly logger=new Logger(UserService.name)
     constructor(
         @InjectRepository(User)
-        private readonly userRepository:Repository<User>
+        private readonly userRepository:Repository<User> 
     ){}
 
     findUsers(){
@@ -34,5 +35,4 @@ export class UserService {
     deleteUser(id:number){
         return this.userRepository.delete({id})
     }
-    // createUser
 }

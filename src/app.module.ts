@@ -4,29 +4,32 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './user/user.entity';
-import { Profile } from './profile/profile.entity';
+import { ConfigModule } from '@nestjs/config';
+import ormConfig from './config/orm.config';
+import ormConfigProd from './config/orm.config.prod';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'password',
-      database: 'College_EPR',
-      entities: [User,Profile],
-      synchronize: true,
-      
+    ConfigModule.forRoot({
+      isGlobal:true,
+      load:[ormConfig],
+      expandVariables:true,
+      // envFilePath:'.env'
     }),
-//     ConfigModule.forRoot({ isGlobal:true,load:[ormConfig],expandVariables:true,
-//       envFilePath:`${process.env.NODE_ENV ?? ''}.env` }),
-//     TypeOrmModule.forRootAsync({
-//       useFactory:process.env.NODE_ENV !== 'production'? ormConfig:ormConfigProd
-// }),
-  UserModule],
+    TypeOrmModule.forRootAsync({
+       useFactory:process.env.NODE_ENV !== 'production'? ormConfig:ormConfigProd
+    }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver:ApolloDriver,
+      autoSchemaFile:'src/schema.gql',
+      playground:true
+    }),     //  envFilePath:`${process.env.NODE_ENV ?? ''}.env` }),
+  UserModule, AuthModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService
+  ],
 })
 export class AppModule {}

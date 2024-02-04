@@ -1,18 +1,21 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from 'src/input/create-user.dto';
 import { UpdateUserDto } from 'src/input/update-user.dto';
 
 @Controller('user')
 export class UserController {
+    private readonly logger=new Logger(UserController.name)
     constructor (
         private readonly userService:UserService,
     ){}
 
     @Get()
     async getUsers(){
+        this.logger.log(`hit the get Users route`)
         const users=await this.userService.findUsers()
+        this.logger.debug(`Found ${users.length} `)
     return users
 }
 
@@ -22,7 +25,7 @@ export class UserController {
     }
     
     @Post()
-    async create(@Body() createUserDto:CreateUserDto){
+    async createUser(@Body() createUserDto:CreateUserDto){
         return await this.userService.createUser(createUserDto)
     }
 
@@ -39,11 +42,6 @@ export class UserController {
     ){
         await this.userService.deleteUser(id)
     }    
-
-    @Post('profiles')
-    createUserProfile(){
-
-    }
 }
 // private users:User[]=[]
 //   @Get()
